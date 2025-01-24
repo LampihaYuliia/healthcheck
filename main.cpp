@@ -3,7 +3,7 @@
 #include "Diary.h"
 
 int main() {
-    std::vector<Diary> days;  // Вектор для хранения объектов Diary
+    std::vector<Diary> days;  
 
     while (true) {
         std::cout << "\nMenu:\n";
