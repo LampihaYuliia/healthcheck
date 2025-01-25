@@ -1,4 +1,5 @@
 #include "Diary.h"
+#include "FoodFactory.h"
 
 Diary::Diary() {
     initializeFoodOptions();
@@ -44,30 +45,36 @@ void Diary::initializeExerciseOptions() {
 }
 
 void Diary::initializeFoodOptions() {
+    MeatFactory meatFactory;
+    VegetableFactory vegetableFactory;
+    FruitFactory fruitFactory;
+    SideDishFactory sideDishFactory;
+
     meatOptions = {
-        new Meat("Chicken ", 165, 31, 3.6, 0, "Breast", true),
-        new Meat("Beef ", 250, 26, 15, 0, "Fillet", true),
-        new Meat("Pork ", 800, 2.4, 90, 0, "Fat", true)
+        meatFactory.createFood("Chicken", 165, 31, 3.6, 0, {"Breast", "true"}),
+        meatFactory.createFood("Beef", 250, 26, 15, 0, {"Fillet", "false"}),
+        meatFactory.createFood("Pork", 800, 2.4, 90, 0, {"Fat", "false"})
     };
 
     vegetableOptions = {
-        new Vegetable("Spinach", 23, 2.9, 0.4, 3.6, true, "Spring"),
-        new Vegetable("Carrot", 41, 0.9, 0.2, 10, false, "Autumn"),
-        new Vegetable("Broccoli", 55, 3.7, 0.6, 11.2, false, "Winter")
+        vegetableFactory.createFood("Spinach", 23, 2.9, 0.4, 3.6, {"true", "Spring"}),
+        vegetableFactory.createFood("Carrot", 41, 0.9, 0.2, 10, {"false", "Autumn"}),
+        vegetableFactory.createFood("Broccoli", 55, 3.7, 0.6, 11.2, {"false", "Winter"})
     };
 
     fruitOptions = {
-        new Fruit("Apple", 52, 0.3, 0.2, 14, 12, "Poland"),
-        new Fruit("Banana", 89, 1.1, 0.3, 23, 14, "Ecuador"),
-        new Fruit("Orange", 47, 0.9, 0.1, 12, 8, "Spain")
+        fruitFactory.createFood("Apple", 52, 0.3, 0.2, 14, {"12", "Poland"}),
+        fruitFactory.createFood("Banana", 89, 1.1, 0.3, 23, {"14", "Ecuador"}),
+        fruitFactory.createFood("Orange", 47, 0.9, 0.1, 12, {"8", "Spain"})
     };
 
     sideDishOptions = {
-        new SideDish("Rice", 130, 2.4, 0.3, 28, "Boiled", true),
-        new SideDish("Mashed Potatoes", 88, 2, 4, 15, "Mashed", true),
-        new SideDish("Pasta", 131, 5, 1.1, 25, "Boiled", false)
+        sideDishFactory.createFood("Rice", 130, 2.4, 0.3, 28, {"Boiled", "true"}),
+        sideDishFactory.createFood("Mashed Potatoes", 88, 2, 4, 15, {"Mashed", "true"}),
+        sideDishFactory.createFood("Pasta", 131, 5, 1.1, 25, {"Boiled", "false"})
     };
 }
+
 
 std::string Diary::Date() {
     std::cout << "Enter the date (dd-mm-yyyy): ";
@@ -157,7 +164,7 @@ void Diary::addFood() {
             case 4: selectedCategory = &sideDishOptions; break;
             default:
                 std::cout << "Invalid category. Please try again.\n";
-                continue;  // Ïîâòîðþºìî âèá³ð
+                continue;  // ÐŸÐ¾Ð²Ñ‚Ð¾Ñ€ÑŽÑ”Ð¼Ð¾ Ð²Ð¸Ð±Ñ–Ñ€
         }
 
         std::cout << "\nAvailable foods:\n";
@@ -172,7 +179,7 @@ void Diary::addFood() {
 
         if (choice < 1 || choice > selectedCategory->size()) {
             std::cout << "Invalid choice. Please try again.\n";
-            continue;  // Ïîâòîðþºìî âèá³ð
+            continue;  // ÐŸÐ¾Ð²Ñ‚Ð¾Ñ€ÑŽÑ”Ð¼Ð¾ Ð²Ð¸Ð±Ñ–Ñ€
         }
 
         Food* selectedFood = (*selectedCategory)[choice - 1];
@@ -180,13 +187,13 @@ void Diary::addFood() {
         double grams;
         std::cin >> grams;
 
-        // Îá÷èñëþºìî õàð÷îâ³ õàðàêòåðèñòèêè äëÿ ââåäåíî¿ âàãè
+        // ÐžÐ±Ñ‡Ð¸ÑÐ»ÑŽÑ”Ð¼Ð¾ Ñ…Ð°Ñ€Ñ‡Ð¾Ð²Ñ– Ñ…Ð°Ñ€Ð°ÐºÑ‚ÐµÑ€Ð¸ÑÑ‚Ð¸ÐºÐ¸ Ð´Ð»Ñ Ð²Ð²ÐµÐ´ÐµÐ½Ð¾Ñ— Ð²Ð°Ð³Ð¸
         double calories = selectedFood->calculateCalories(grams);
         double protein = selectedFood->calculateProtein(grams);
         double fat = selectedFood->calculateFat(grams);
         double carbs = selectedFood->calculateCarbs(grams);
 
-        // Âèâîäèìî ³íôîðìàö³þ ïðî ¿æó
+        // Ð’Ð¸Ð²Ð¾Ð´Ð¸Ð¼Ð¾ Ñ–Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ñ–ÑŽ Ð¿Ñ€Ð¾ Ñ—Ð¶Ñƒ
         std::cout << "\n=== Nutritional Information ===\n";
         std::cout << "Food: " << selectedFood->getName() << "\n";
         std::cout << "Weight: " << grams << "g\n";
@@ -195,7 +202,7 @@ void Diary::addFood() {
         std::cout << "Fat: " << fat << " g\n";
         std::cout << "Carbs: " << carbs << " g\n";
 
-        // Äîäàºìî äî ñïèñêó ïðîäóêò³â
+        // Ð”Ð¾Ð´Ð°Ñ”Ð¼Ð¾ Ð´Ð¾ ÑÐ¿Ð¸ÑÐºÑƒ Ð¿Ñ€Ð¾Ð´ÑƒÐºÑ‚Ñ–Ð²
         Food* adjustedFood = selectedFood->createWithAdjustedValues(calories, protein, fat, carbs);
         foods.push_back(adjustedFood);
 
@@ -228,6 +235,3 @@ const std::vector<Food*>& Diary::getFoods() const {
 const std::string& Diary::getDate() const {
     return date;
 }
-
-
-
