@@ -1,16 +1,42 @@
-#ifndef FOODFACTORY_H_INCLUDED
-#define FOODFACTORY_H_INCLUDED
+#ifndef FOODFACTORY_H
+#define FOODFACTORY_H
 
 #include "Food.h"
 #include <string>
-#include <stdexcept>
+#include <vector>
 
 class FoodFactory {
 public:
-    static Food* createFood(const std::string& type, const std::string& name, double calories,
-                            double protein, double fat, double carbs, const std::string& extra1 = "",
-                            bool extra2 = false);
+    virtual ~FoodFactory() = default;
+
+    virtual Food* createFood(const std::string& name, double calories, double protein, double fat, double carbs,
+                             const std::vector<std::string>& additionalParams) = 0;
 };
 
-#endif // FOODFACTORY_H_INCLUDED
+class MeatFactory : public FoodFactory {
+public:
+    Food* createFood(const std::string& name, double calories, double protein, double fat, double carbs,
+                     const std::vector<std::string>& additionalParams) override;
+};
+
+class VegetableFactory : public FoodFactory {
+public:
+    Food* createFood(const std::string& name, double calories, double protein, double fat, double carbs,
+                     const std::vector<std::string>& additionalParams) override;
+};
+
+class FruitFactory : public FoodFactory {
+public:
+    Food* createFood(const std::string& name, double calories, double protein, double fat, double carbs,
+                     const std::vector<std::string>& additionalParams) override;
+};
+
+class SideDishFactory : public FoodFactory {
+public:
+    Food* createFood(const std::string& name, double calories, double protein, double fat, double carbs,
+                     const std::vector<std::string>& additionalParams) override;
+};
+
+#endif // FOODFACTORY_H
+
 
